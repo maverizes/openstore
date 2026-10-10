@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Aloqa.uz — чат по ID, телефону и email | Birga</title>
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="extra.css" />
+</head>
+<body>
+<div class="w"><section>
+<h2>💬 Aloqa.uz</h2><p class="sub">Пиши людям по ID (7 цифр), телефону или email. Переписку видят только вы двое.</p>
+<div class="box al" id="al">
+  <div class="alL">
+    <div id="meBox"></div>
+    <div class="row" style="margin:0"><input id="nq" placeholder="ID, телефон или email" onkeydown="if(event.key==='Enter')nc()" /><button onclick="nc()">Найти</button></div>
+    <div id="chl"></div>
+  </div>
+  <div class="alR" id="alR"><p class="sub">Выбери чат или найди собеседника.</p></div>
+</div>
+</section></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script src="localdb.js"></script>
+<script src="catalog.js"></script>
+<script src="shared.js"></script>
+<script src="ai.js"></script>
+<script src="aloqa.js"></script>
+</body>
+</html>

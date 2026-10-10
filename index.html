@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Birga — всё в одном месте</title>
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="extra.css" />
+</head>
+<body>
+<div class="w">
+<div class="hero">
+  <h1>Birga<br /><span>всё в одном месте</span></h1>
+  <p>Выгодные цены, чат по номеру, помощь с ИИ и 15 игр. Ищи по всей платформе — если не найдём, подскажем похожие сайты.</p>
+  <div class="sr"><input id="hq" placeholder="Что ищем? RTX 4060, змейка, как написать другу…" onkeydown="if(event.key==='Enter')go()" /><button onclick="go()">Найти</button></div>
+  <div id="hr" style="text-align:left;max-width:760px;margin:0 auto"></div>
+</div>
+<section><div class="apps">
+  <a class="app" href="benefit.html"><div class="e">🛍</div><h3>Benefit.uz</h3><p>Где купить дешевле: цены магазинов, совместимость, сборки ПК.</p></a>
+  <a class="app" href="aloqa.html"><div class="e">💬</div><h3>Aloqa.uz</h3><p>Мини-мессенджер: пиши по ID, телефону или email.</p></a>
+  <a class="app" href="help.html"><div class="e">🆘</div><h3>Помощь</h3><p>FAQ, ИИ-агент и связь с админами, если что-то не работает.</p></a>
+  <a class="app" href="games.html"><div class="e">🎮</div><h3>Игры</h3><p>15 игр: Pac-Man, Flappy Bird, тетрис, 2048 и другие.</p></a>
+</div></section>
+</div>
+<footer>© 2026 Birga — Benefit.uz · Aloqa.uz · Помощь · Игры</footer>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script src="localdb.js"></script>
+<script src="catalog.js"></script>
+<script src="shared.js"></script>
+<script src="ai.js"></script>
+<script>
+let lastQ="";
+function go(){
+  const q=$("hq").value.trim();if(!q)return;lastQ=q;
+  const r=searchAll(q);let h="";
+  if(r.p.length)h+=`<h3>🛍 Benefit — где купить</h3><div class="lst">${r.p.map(x=>`<a href="benefit.html#p=${x.id}">${x.e} ${esc(x.n)} ${x.p?`<small>рынок ~${x.p.toLocaleString("ru-RU")} ₽</small>`:""}</a>`).join("")}</div>`;
+  if(r.g.length)h+=`<h3>🎮 Игры</h3><div class="lst">${r.g.map(x=>`<a href="games.html#g=${x.id}">${x.e} ${esc(x.n)}</a>`).join("")}</div>`;
+  if(r.h.length)h+=`<h3>🆘 Ответы</h3>${r.h.map(x=>`<div class="box" style="margin-bottom:8px"><b>${esc(x.q)}</b><br>${esc(x.a)}</div>`).join("")}`;
+  if(!h)h=`<div class="box"><b>По запросу «${esc(q)}» на Birga ничего нет.</b><p class="sub">Похожие сайты и поиск:</p>${sgHtml(q)}</div>`;
+  h+=`<div class="row"><button class="g" onclick="aiOpen(lastQ)">🤖 Спросить Birga AI</button></div>`;
+  $("hr").innerHTML=h;
+}
+</script>
+</body>
+</html>

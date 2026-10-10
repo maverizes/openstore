@@ -1,0 +1,106 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{d}/documents {
+    function signed() { return request.auth != null; }
+    function prof() { return get(/databases/$(d)/documents/users/$(request.auth.uid)).data; }
+    function has() { return signed() && exists(/databases/$(d)/documents/users/$(request.auth.uid)); }
+    function role() { return has() ? prof().role : ''; }
+    function active() { return has() && prof().banned != true; }
+    function isAdmin() { return active() && (role() == 'admin' || role() == 'pre'); }
+    function isPre() { return active() && role() == 'pre'; }
+    function changed() { return request.resource.data.diff(resource.data).affectedKeys(); }
+
+    match /users/{u} {
+      allow read: if true;
+      allow create: if signed() && request.auth.uid == u
+        && request.resource.data.keys().hasOnly(['name','role','banned','ts','aid'])
+        && request.resource.data.role in ['user','seller']
+        && request.resource.data.banned == false
+        && request.resource.data.name is string && request.resource.data.name.size() <= 30
+        && get(/databases/$(d)/documents/handles/$('id:' + request.resource.data.aid)).data.uid == request.auth.uid;
+      allow update: if (isPre() && u != request.auth.uid)
+        || (isAdmin() && u != request.auth.uid && resource.data.role in ['user','seller'] && changed().hasOnly(['banned']));
+      allow delete: if (isPre() && u != request.auth.uid)
+        || (isAdmin() && resource.data.role in ['user','seller']);
+    }
+    // Каталог контактов Aloqa: искать можно только по точному ключу (перебор списка запрещён)
+    match /handles/{h} {
+      allow get: if signed();
+      allow list: if false;
+      allow create: if signed() && request.resource.data.keys().hasOnly(['uid']) && request.resource.data.uid == request.auth.uid
+        && (h.matches('id:[0-9]{7}')
+            || (request.auth.token.email != null && h == 'email:' + request.auth.token.email.lower())
+            || h.matches('tel:[0-9]{10,15}'));
+      allow delete: if signed() && resource.data.uid == request.auth.uid;
+    }
+    match /profiles/{p} {
+      allow read, write: if signed() && request.auth.uid == p;
+    }
+    match /offers/{o} {
+      allow read: if true;
+      allow create: if active() && (role() == 'seller' || isAdmin())
+        && request.resource.data.sid == request.auth.uid
+        && request.resource.data.blocked == false
+        && request.resource.data.price is int && request.resource.data.price > 0;
+      allow update: if isAdmin()
+        || (active() && resource.data.sid == request.auth.uid && changed().hasOnly(['price','shop','url']));
+      allow delete: if isAdmin() || (active() && resource.data.sid == request.auth.uid);
+    }
+    match /products/{pr} {
+      allow read: if true;
+      allow create: if active() && (role() == 'seller' || isAdmin())
+        && request.resource.data.sid == request.auth.uid
+        && request.resource.data.n is string && request.resource.data.n.size() <= 60
+        && request.resource.data.p is int && request.resource.data.p >= 0
+        && request.resource.data.keys().hasOnly(['c','n','s','p','sid','sname','ts']);
+      allow delete: if isAdmin() || (active() && resource.data.sid == request.auth.uid);
+    }
+    match /chats/{c} {
+      allow get: if signed() && (resource == null || request.auth.uid in resource.data.members);
+      allow list: if signed() && request.auth.uid in resource.data.members;
+      allow create: if active() && request.auth.uid in request.resource.data.members
+        && request.resource.data.members.size() == 2
+        && request.resource.data.keys().hasOnly(['members','ts']);
+      allow update: if active() && request.auth.uid in resource.data.members
+        && request.resource.data.members == resource.data.members
+        && changed().hasOnly(['last','ts','lastFrom']);
+      match /msgs/{m} {
+        allow read: if signed() && request.auth.uid in get(/databases/$(d)/documents/chats/$(c)).data.members;
+        allow create: if active() && request.auth.uid in get(/databases/$(d)/documents/chats/$(c)).data.members
+          && request.resource.data.from == request.auth.uid
+          && request.resource.data.text is string && request.resource.data.text.size() <= 1000;
+        allow delete: if signed() && resource.data.from == request.auth.uid;
+      }
+    }
+    match /tickets/{t} {
+      allow read: if signed() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if active() && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'open' && request.resource.data.subject.size() <= 80;
+      allow update: if ((active() && resource.data.uid == request.auth.uid) || isAdmin())
+        && changed().hasOnly(['status','last']);
+      match /msgs/{m} {
+        allow read: if signed() && (get(/databases/$(d)/documents/tickets/$(t)).data.uid == request.auth.uid || isAdmin());
+        allow create: if active() && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text.size() <= 1500
+          && ((request.resource.data.staff == false && get(/databases/$(d)/documents/tickets/$(t)).data.uid == request.auth.uid)
+              || (request.resource.data.staff == true && isAdmin()));
+      }
+    }
+    match /scores/{s} {
+      allow read: if true;
+      allow create, update: if active() && request.resource.data.uid == request.auth.uid
+        && s == request.resource.data.game + '_' + request.auth.uid
+        && request.resource.data.score is int && request.resource.data.score >= 0
+        && request.resource.data.keys().hasOnly(['game','uid','name','score','ts']);
+    }
+    match /adminChat/{m} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() && request.resource.data.uid == request.auth.uid && request.resource.data.text.size() <= 500;
+      allow delete: if isPre();
+    }
+    match /logs/{l} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+    }
+  }
+}

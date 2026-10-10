@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Birga Admin</title>
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+<div id="gate">
+  <div class="gb">
+    <div class="brand">BIRGA<span>ADMIN</span></div>
+    <p id="gm">Загрузка…</p>
+    <div id="gf">
+      <input id="ge" type="email" placeholder="email" />
+      <input id="gp" type="password" placeholder="пароль" onkeydown="if(event.key==='Enter')gl()" />
+      <button onclick="gl()">Войти</button>
+    </div>
+    <a href="index.html">← На Birga</a>
+  </div>
+</div>
+<div id="app" hidden>
+  <aside>
+    <div class="brand">BIRGA<span>ADMIN</span></div>
+    <nav id="nv">
+      <button data-v="ov" onclick="go('ov')">▦ Обзор</button>
+      <button data-v="us" onclick="go('us')">👥 Пользователи</button>
+      <button data-v="of" onclick="go('of')">🏷 Предложения</button>
+      <button data-v="pr" onclick="go('pr')">📊 Цены</button>
+      <button data-v="tk" onclick="go('tk')">🆘 Заявки <span id="tkc"></span></button>
+      <button data-v="ch" onclick="go('ch')">💬 Чат админов</button>
+      <button data-v="rt" onclick="go('rt')">⭐ Рейтинг админов</button>
+      <button data-v="lg" onclick="go('lg')">📜 Журнал</button>
+    </nav>
+    <div class="me" id="me"></div>
+    <a href="index.html">← На Birga</a>
+    <button class="out" onclick="FB.auth.signOut()">Выйти</button>
+  </aside>
+  <main>
+    <header><h1 id="ttl"></h1><input id="gs" placeholder="Поиск…" oninput="Q=this.value;render()" /></header>
+    <div id="v"></div>
+  </main>
+</div>
+<div class="toast" id="ts"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script src="localdb.js"></script>
+<script src="catalog.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

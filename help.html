@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Помощь | Birga</title>
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="extra.css" />
+</head>
+<body>
+<div class="w">
+<section><h2>🆘 Помощь</h2><p class="sub">Ответы на частые вопросы, ИИ-агент и живые админы.</p>
+<div class="row" style="margin:0 0 14px"><button onclick="aiOpen()">🤖 Спросить Birga AI</button><button class="g" onclick="document.getElementById('tkn').scrollIntoView()">🧑‍💼 Написать админам</button></div>
+<div class="faq" id="faq"></div></section>
+<section id="tkn"><h2>🧑‍💼 Заявки админам</h2><p class="sub">Если ИИ не помог или не отвечает — опиши проблему, админы ответят прямо здесь.</p>
+<div id="tkg"></div>
+<div id="tkw" hidden>
+  <div class="box" style="margin-bottom:12px"><div class="fm" style="grid-template-columns:1fr"><div><label>Тема</label><input id="ts1" maxlength="80" /></div><div><label>Сообщение</label><input id="tt" maxlength="1500" /></div><button onclick="nt()">Отправить заявку</button></div></div>
+  <div class="tkw"><div class="tkl" id="tkl"></div><div class="box" id="tkt"><p class="sub">Выбери заявку слева.</p></div></div>
+</div></section>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script src="localdb.js"></script>
+<script src="catalog.js"></script>
+<script src="shared.js"></script>
+<script src="ai.js"></script>
+<script src="help.js"></script>
+</body>
+</html>

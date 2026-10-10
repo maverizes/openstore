@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Benefit.uz — где купить выгодно | Birga</title>
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="extra.css" />
+</head>
+<body>
+
+<div class="w">
+<div class="hero"><h1>Benefit.uz<br /><span>покупай выгодно</span></h1><p>Сравнивай цены продавцов на комплектующие и технику, проверяй совместимость и делись ссылками. Здесь только поиск лучшей цены — заказов нет.</p><div class="perks"><b>💸 Лучшие цены</b><b>🧩 Совместимость</b><b>🔗 Ссылки на магазины</b><b>🏷 Свои цены для продавцов</b></div></div>
+<div class="tabs"><a class="btn g" href="#cat">Каталог</a><a class="btn g" href="#cmp">Совместимость</a><a class="btn g" href="#bld">Сборки</a><a id="ns" class="btn g" href="#sell" hidden>Мои цены</a></div>
+
+<section id="cat"><h2>Каталог и цены</h2><p class="sub">Нажми «Где купить», чтобы увидеть предложения магазинов — от дешёвых к дорогим.</p>
+<div class="tabs" id="tabs"></div>
+<div class="row"><input id="q" placeholder="Поиск: RTX, DDR5, Ryzen…" oninput="rc()" /><select id="so" onchange="rc()" style="max-width:170px"><option value="0">По умолчанию</option><option value="1">Дешевле</option><option value="2">Дороже</option></select></div>
+<div id="demo" class="chk wa" style="margin-top:12px" hidden>⚠️ Сейчас показаны 5 демо-товаров с вымышленными ценами. Они исчезнут, как только продавец или админ добавит первый настоящий товар («Мои цены» → «Добавить товар»).</div>
+<div class="grid" id="grid"></div></section>
+
+<section id="cmp"><h2>🧩 Совместимость</h2><p class="sub">Сокет, тип памяти, мощность БП и размер видеокарты.</p>
+<div class="box"><div class="cmp" id="cs"></div><div id="res"></div></div></section>
+
+<section id="bld"><h2>🔧 Готовые сборки</h2><p class="sub">Проверены на совместимость. Цена — ориентир по рынку.</p><div class="bd" id="bds"></div></section>
+
+
+<section id="sell" hidden><h2>🏷️ Мои предложения</h2><p class="sub">Сначала добавь товар (если его нет в каталоге), потом опубликуй цену со ссылкой на магазин. Свои товары и цены можно менять и удалять.</p>
+<div class="box" style="margin-bottom:12px"><h3>1. Добавить товар</h3><div class="fm">
+<div><label>Категория</label><select id="pcat"></select></div>
+<div><label>Название</label><input id="pnm" maxlength="60" placeholder="Например: Ryzen 5 5600" /></div>
+<div><label>Описание</label><input id="pds" maxlength="80" /></div>
+<div><label>Рыночная цена, ₽ (необязательно)</label><input id="pmk" type="number" min="0" /></div>
+<button onclick="addp()">Добавить товар</button></div></div>
+<div class="box"><h3>2. Опубликовать цену магазина</h3><div class="fm">
+<div><label>Товар</label><select id="sp"></select></div>
+<div><label>Магазин</label><input id="ss" maxlength="40" placeholder="Название магазина" /></div>
+<div><label>Цена, ₽</label><input id="sx" type="number" min="1" /></div>
+<div><label>Ссылка</label><input id="su" placeholder="https://…" /></div>
+<button onclick="post()">Опубликовать</button></div>
+<div id="mine"></div></div></section>
+
+</div>
+<footer>© 2026 Birga · Benefit.uz — поиск лучших цен. Заказы не оформляются.</footer>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script src="localdb.js"></script>
+<script src="catalog.js"></script>
+<script src="shared.js"></script>
+<script src="ai.js"></script>
+<script src="benefit.js"></script>
+</body>
+</html>
